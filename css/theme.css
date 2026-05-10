@@ -1,0 +1,51 @@
+/* DEFAULT / DARK (Dracula-inspired) */
+:root,
+body.theme-dark {
+    --bg:         #0d0d0d;
+    --bg2:        #141414;
+    --fg:         #cdd6f4;
+    --dim:        #6c7086;
+    --border:     #1e1e2e;
+    --accent:     #89b4fa;
+    --accent-fg:  #1e1e2e;
+    --red:        #f38ba8;
+    --green:      #a6e3a1;
+    --yellow:     #f9e2af;
+    --cyan:       #89dceb;
+    --magenta:    #cba6f7;
+    --scrollbar:  #313244;
+}
+
+/* ASH — Tokyo Night inspired */
+body.theme-ash {
+    --bg:         #1a1b26;
+    --bg2:        #16161e;
+    --fg:         #a9b1d6;
+    --dim:        #565f89;
+    --border:     #292e42;
+    --accent:     #7aa2f7;
+    --accent-fg:  #16161e;
+    --red:        #f7768e;
+    --green:      #9ece6a;
+    --yellow:     #e0af68;
+    --cyan:       #7dcfff;
+    --magenta:    #bb9af7;
+    --scrollbar:  #3b4261;
+}
+
+/* WHITE — GitHub Light inspired */
+body.theme-white {
+    --bg:         #ffffff;
+    --bg2:        #f6f8fa;
+    --fg:         #24292f;
+    --dim:        #8c959f;
+    --border:     #d0d7de;
+    --accent:     #0969da;
+    --accent-fg:  #ffffff;
+    --red:        #cf222e;
+    --green:      #116329;
+    --yellow:     #9a6700;
+    --cyan:       #0550ae;
+    --magenta:    #8250df;
+    --scrollbar:  #d0d7de;
+}

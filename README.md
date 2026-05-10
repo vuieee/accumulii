@@ -1,6 +1,6 @@
 # Accumulii
 
-This was created as required by our Web Development I. 
+In Partial Fulfillment of the Requirements for WEB DEVELOPMENT 1
 
 ---
 

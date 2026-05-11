@@ -1,9 +1,9 @@
 <?php
 session_start();
 
-$host = 'localhost';
-$dbname = 'accumulii';
-$username = 'root'; 
+$host     = 'localhost';
+$dbname   = 'accumulii';
+$username = 'root';
 $password = '';
 
 try {
@@ -14,10 +14,17 @@ try {
     die(json_encode(['status' => 'error', 'message' => 'Database connection failed.']));
 }
 
+/**
+ * Returns true if the current request has an authenticated session.
+ */
 function isLoggedIn() {
     return isset($_SESSION['user_id']);
 }
 
+/**
+ * Redirects to login.php if the user is not authenticated.
+ * Call at the top of any page that requires a logged-in session.
+ */
 function requireAuth() {
     if (!isLoggedIn()) {
         header('Location: login.php');

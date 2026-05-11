@@ -7,6 +7,7 @@ if (isset($_GET['action']) && $_GET['action'] === 'logout') {
     exit;
 }
 
+// AJAX login — returns JSON so the JS can drive the boot animation.
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['ajax_login'])) {
     header('Content-Type: application/json');
     $username = trim($_POST['username'] ?? '');
@@ -42,8 +43,6 @@ if (isLoggedIn()) { header('Location: index.php'); exit; }
 <body class="theme-dark">
 
     <div class="login-terminal">
-
-        <!-- ASCII logo row -->
         <div class="login-logo">
 █████╗  ██████╗  ██████╗ ██╗   ██╗███╗   ███╗██╗   ██╗██╗     ██╗██╗
 ██╔══██╗██╔════╝ ██╔════╝██║   ██║████╗ ████║██║   ██║██║     ██║██║
@@ -52,13 +51,9 @@ if (isLoggedIn()) { header('Location: index.php'); exit; }
 ██║  ██║╚██████╗ ╚██████╗╚██████╔╝██║ ╚═╝ ██║╚██████╔╝███████╗██║██║
 ╚═╝  ╚═╝ ╚═════╝  ╚═════╝ ╚═════╝ ╚═╝     ╚═╝ ╚═════╝ ╚══════╝╚═╝╚═╝</div>
 
-        <!-- System hint row -->
         <div class="login-hint">System Protocol: Enter username, or type <span class="c-cyan">register</span> to initialize a new instance.</div>
-
-        <!-- Scrollable output history -->
         <div class="login-output" id="output"></div>
 
-        <!-- Pinned input row -->
         <div class="login-input-row" id="input-container">
             <div class="prompt-wrap">
                 <span class="prompt-body" id="prompt-text">login</span>
@@ -70,21 +65,27 @@ if (isLoggedIn()) { header('Location: index.php'); exit; }
                 <span class="cursor"></span>
             </div>
         </div>
-
     </div>
 
     <script>
     (function () {
-        const input      = document.getElementById('cmd-input');
-        const typedSpan  = document.getElementById('typed-text');
-        const promptLabel= document.getElementById('prompt-text');
-        const output     = document.getElementById('output');
-        const inputRow   = document.getElementById('input-container');
+        const input       = document.getElementById('cmd-input');
+        const typedSpan   = document.getElementById('typed-text');
+        const promptLabel = document.getElementById('prompt-text');
+        const output      = document.getElementById('output');
+        const inputRow    = document.getElementById('input-container');
 
+        // step 0 = awaiting username, step 1 = awaiting password
         let step = 0, username = '', password = '';
 
-        document.addEventListener('click', () => input.focus());
+        // Allow copy-paste while still routing unfocused clicks to the input.
+        document.addEventListener('click', () => {
+            if (window.getSelection().toString() === '') {
+                input.focus();
+            }
+        });
 
+        // Mask the mirror span with dots during password entry (step 1).
         input.addEventListener('input', () => {
             typedSpan.textContent = step === 1
                 ? '·'.repeat(input.value.length)
@@ -118,6 +119,13 @@ if (isLoggedIn()) { header('Location: index.php'); exit; }
 
         const delay = ms => new Promise(r => setTimeout(r, ms));
 
+        /**
+         * Plays the post-authentication boot animation, then redirects to index.php.
+         * The animated progress bar uses a two-phase speed profile: slower early on
+         * to feel deliberate, then faster near 100% for a snappy finish.
+         *
+         * @param {number} authMs - Round-trip time of the login request in milliseconds.
+         */
         async function runBootSequence(authMs) {
             inputRow.style.visibility = 'hidden';
 
@@ -133,7 +141,6 @@ if (isLoggedIn()) { header('Location: index.php'); exit; }
                 await delay(Math.random() * 350 + 180);
             }
 
-            /* progress bar */
             const barEl = document.createElement('div');
             barEl.className = 'boot-bar';
             output.appendChild(barEl);
@@ -184,9 +191,9 @@ if (isLoggedIn()) { header('Location: index.php'); exit; }
 
                 try {
                     const loginStart = performance.now();
-                    const res  = await fetch('login.php', { method: 'POST', body: fd });
-                    const data = await res.json();
-                    const loginMs = Math.round(performance.now() - loginStart);
+                    const res        = await fetch('login.php', { method: 'POST', body: fd });
+                    const data       = await res.json();
+                    const loginMs    = Math.round(performance.now() - loginStart);
 
                     if (data.status === 'success') {
                         await runBootSequence(loginMs);

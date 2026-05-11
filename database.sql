@@ -1,12 +1,17 @@
 CREATE DATABASE IF NOT EXISTS accumulii;
 USE accumulii;
 
+DROP TABLE IF EXISTS showcases;
+DROP TABLE IF EXISTS profile_comments;
+DROP TABLE IF EXISTS repositories;
+DROP TABLE IF EXISTS users;
+
 CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(50) UNIQUE NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
-    role VARCHAR(50) DEFAULT 'Developer',
+    role VARCHAR(100) DEFAULT 'Developer',
     bio TEXT,
     university VARCHAR(100) DEFAULT 'University of San Carlos - Talamban Campus',
     course VARCHAR(100) DEFAULT 'Bachelor of Science in Information Technology',
@@ -34,21 +39,39 @@ CREATE TABLE profile_comments (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Passwords are set to 'password'
-INSERT INTO users (username, email, password, role) VALUES 
-('joshuareed', 'joshuareed@accumulii.local', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Lead Dev, Frontend'),
-('lancer', 'lancer@accumulii.local', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Backend'),
-('john', 'john@accumulii.local', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Backend'),
-('joshuadan', 'joshuadan@accumulii.local', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Assistant UI/UX');
+CREATE TABLE showcases (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    image_name VARCHAR(100) NOT NULL UNIQUE,
+    title VARCHAR(150) NOT NULL,
+    category VARCHAR(50) DEFAULT 'General',
+    file_type VARCHAR(10) DEFAULT 'png',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
 
--- Repository seed data
+INSERT INTO users (username, email, password, role) VALUES 
+('joshuareed', 'joshuareed@accumulii.local', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Lead Full-Stack Engineer'),
+('lancer', 'lancer@accumulii.local', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Backend Engineer'),
+('john', 'john@accumulii.local', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Database Administrator'),
+('joshuadan', 'joshuadan@accumulii.local', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Frontend Developer');
+
 INSERT INTO repositories (user_id, repo_name, repo_description, language, stars, created_at) VALUES
-(1, 'accumulii',         'Terminal-style developer profile and repo showcase platform', 'PHP',        14, '2024-11-03 09:12:00'),
-(1, 'portforge',         'Static portfolio generator with CLI config and live preview',  'JavaScript', 8,  '2024-08-17 14:30:00'),
-(1, 'snaproute',         'Lightweight PHP router with zero dependencies',                'PHP',        5,  '2024-06-01 11:00:00'),
-(2, 'querycraft',        'SQL query builder with fluent interface for MySQL/PostgreSQL',  'PHP',        11, '2024-09-22 10:05:00'),
-(2, 'logpulse',          'Real-time log monitoring dashboard with WebSocket support',    'JavaScript', 7,  '2024-07-14 16:20:00'),
-(3, 'dbsync',            'Database migration tool with rollback and diff support',       'PHP',        9,  '2024-10-10 08:45:00'),
-(3, 'cachewave',         'Redis-based caching layer with tag-based invalidation',        'PHP',        4,  '2024-05-28 13:15:00'),
-(4, 'gridflow',          'CSS grid layout builder with drag-and-drop interface',         'JavaScript', 6,  '2024-12-01 12:00:00'),
-(4, 'themepilot',        'Theme switcher utility for multi-theme web applications',      'CSS',        3,  '2024-04-09 09:30:00');
+(1, 'yasb', 'Yet Another Status Bar', 'Python', 412, '2024-01-15 09:12:00'),
+(1, 'komorebi', 'A tiling window manager for Windows', 'Rust', 1850, '2024-02-10 14:30:00'),
+(1, 'floorp-projects', 'Floorp Web Browser', 'JavaScript', 1205, '2024-03-05 11:00:00'),
+(1, 'OpenArc', 'Open source Arc browser alternative', 'TypeScript', 890, '2024-04-20 10:05:00'),
+(1, 'OptiScaler', 'DLSS/FSR upscaling wrapper', 'C++', 560, '2024-05-12 16:20:00'),
+(1, 'd3d8to9', 'D3D8 to D3D9 converter', 'C++', 1420, '2024-06-18 08:45:00'),
+(1, 'helium', 'Helium floating browser', 'Swift', 734, '2024-07-22 13:15:00'),
+(1, 'reshade-shaders', 'A collection of post-processing shaders', 'HLSL', 3200, '2024-08-30 12:00:00');
+
+INSERT INTO showcases (user_id, image_name, title, category, file_type) VALUES
+(1, 'net-themes', 'Terminal Network Themes', 'Terminal', 'png'),
+(1, 'bspwm', 'BSPWM Under 2GB RAM', 'Ricing', 'png'),
+(1, 'hypr-switch', 'Hyprland Theme Switcher', 'Ricing', 'png'),
+(1, 'hypr-gruv', 'Hyprland Yay Gruvy', 'Ricing', 'png'),
+(1, 'gentoo-min', 'Cozy Gentoo Minimalist', 'Ricing', 'png'),
+(1, 'gentoo-cat', 'Gentoo Cozy Setup', 'Ricing', 'png'),
+(1, 'niri-glass', 'Niri Glassy Rice', 'Ricing', 'png'),
+(1, 'yabai', 'Yabai Simple Rice', 'Ricing', 'png');

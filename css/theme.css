@@ -1,51 +1,56 @@
-/* DEFAULT / DARK (Dracula-inspired) */
-:root,
-body.theme-dark {
-    --bg:         #0d0d0d;
-    --bg2:        #141414;
-    --fg:         #cdd6f4;
-    --dim:        #6c7086;
-    --border:     #1e1e2e;
-    --accent:     #89b4fa;
-    --accent-fg:  #1e1e2e;
-    --red:        #f38ba8;
-    --green:      #a6e3a1;
-    --yellow:     #f9e2af;
-    --cyan:       #89dceb;
-    --magenta:    #cba6f7;
-    --scrollbar:  #313244;
+/* ─── THEME OVERRIDES ────────────────────────────────────────────────────────
+   Each theme class redefines the design tokens declared in style.css :root.
+   Apply the matching class to <body> (e.g. class="theme-ash") to activate.
+   ─────────────────────────────────────────────────────────────────────────── */
+
+:root, .theme-dark {
+    --bg: #050505;
+    --bg2: #0f0f0f;
+    --fg: #8fa3b3;
+    --dim: #49596a;
+    --accent: #b8c8d4;
+    --accent-fg: #050505;
+    --border: #1e2b38;
+    --red: #e06c75;
+    --green: #5fbd8a;
+    --yellow: #d4b96a;
+    --blue: #7da4d9;
+    --magenta: #c778a0;
+    --cyan: #56b6c2;
+    --scrollbar: #1e2b38;
 }
 
-/* ASH — Tokyo Night inspired */
-body.theme-ash {
-    --bg:         #1a1b26;
-    --bg2:        #16161e;
-    --fg:         #a9b1d6;
-    --dim:        #565f89;
-    --border:     #292e42;
-    --accent:     #7aa2f7;
-    --accent-fg:  #16161e;
-    --red:        #f7768e;
-    --green:      #9ece6a;
-    --yellow:     #e0af68;
-    --cyan:       #7dcfff;
-    --magenta:    #bb9af7;
-    --scrollbar:  #3b4261;
+.theme-ash {
+    --bg: #1a1c20;
+    --bg2: #21242a;
+    --fg: #9aacba;
+    --dim: #5a6a7a;
+    --accent: #c0cdd8;
+    --accent-fg: #1a1c20;
+    --border: #3a4450;
+    --red: #e06c75;
+    --green: #5fbd8a;
+    --yellow: #d4b96a;
+    --blue: #7da4d9;
+    --magenta: #c778a0;
+    --cyan: #56b6c2;
+    --scrollbar: #3a4450;
 }
 
-/* WHITE — GitHub Light inspired */
-body.theme-white {
-    --bg:         #ffffff;
-    --bg2:        #f6f8fa;
-    --fg:         #24292f;
-    --dim:        #8c959f;
-    --border:     #d0d7de;
-    --accent:     #0969da;
-    --accent-fg:  #ffffff;
-    --red:        #cf222e;
-    --green:      #116329;
-    --yellow:     #9a6700;
-    --cyan:       #0550ae;
-    --magenta:    #8250df;
-    --scrollbar:  #d0d7de;
+/* Light theme — accent shifts to dark navy to maintain contrast against the pale background. */
+.theme-white {
+    --bg: #f5f5f0;
+    --bg2: #ebebе6;
+    --fg: #3a4450;
+    --dim: #7a8a9a;
+    --accent: #2a3a4a;
+    --accent-fg: #f5f5f0;
+    --border: #c8d0d8;
+    --red: #c0392b;
+    --green: #27795a;
+    --yellow: #8a6300;
+    --blue: #2c5f9a;
+    --magenta: #7d3472;
+    --cyan: #1d6e7a;
+    --scrollbar: #c8d0d8;
 }

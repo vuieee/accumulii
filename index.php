@@ -15,11 +15,6 @@ $user  = htmlspecialchars($_SESSION['username']);
 </head>
 <body class="theme-<?php echo htmlspecialchars($_SESSION['theme'] ?? 'dark'); ?>" data-user="<?php echo $user; ?>">
 
-    <!--
-        LAYOUT: CSS Grid  →  row 1 = #output (scrolls)
-                             row 2 = #input-row (pinned)
-        RULE: #output appends only. Never re-rendered.
-    -->
     <div id="terminal">
         <div id="output"></div>
 
@@ -46,20 +41,28 @@ $user  = htmlspecialchars($_SESSION['username']);
         const user      = document.body.dataset.user;
 
         let history = [], histIdx = -1;
+        let lastCommandType = '';
 
-        /* ─── focus trap ─────────────────────────── */
-        document.addEventListener('click', () => input.focus());
+        // Allow text selection for copy-paste while still routing all other
+        // clicks back to the hidden input so typing works immediately.
+        document.addEventListener('click', () => {
+            if (window.getSelection().toString() === '') {
+                input.focus();
+            }
+        });
         input.focus();
 
-        /* ─── mirror typing ──────────────────────── */
+        // Mirror keystrokes into the visible span so the real input can stay hidden.
         input.addEventListener('input', () => {
             typedSpan.textContent = input.value;
         });
 
-        /* ─── append helpers (never re-render) ───── */
-
         /**
-         * Append a command-echo row: prompt badge + text
+         * Appends a command-echo row (prompt chip + typed text) to the output.
+         * Returns the element so the caller can scroll to it.
+         *
+         * @param {string} cmdStr - The raw command string to display.
+         * @returns {HTMLElement}
          */
         function appendEcho(cmdStr) {
             const row = document.createElement('div');
@@ -71,10 +74,14 @@ $user  = htmlspecialchars($_SESSION['username']);
                 `</div>` +
                 `<span class="cmd-echo-text">${escHtml(cmdStr)}</span>`;
             output.appendChild(row);
+            return row;
         }
 
         /**
-         * Append an HTML result block (from API or command)
+         * Appends an HTML result block to the output area.
+         *
+         * @param {string} html       - HTML string produced by a command handler.
+         * @param {string} extraClass - Optional additional CSS class.
          */
         function appendResult(html, extraClass) {
             if (!html && html !== 0) return;
@@ -84,26 +91,29 @@ $user  = htmlspecialchars($_SESSION['username']);
             output.appendChild(block);
         }
 
-        /**
-         * Scroll output to bottom
-         */
         function scrollBottom() {
             output.scrollTop = output.scrollHeight;
         }
 
         function escHtml(s) {
-            return String(s)
-                .replace(/&/g,'&amp;')
-                .replace(/</g,'&lt;')
-                .replace(/>/g,'&gt;');
+            return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
         }
 
-        /* ─── auto-fetch on load ─────────────────── */
+        /**
+         * Scrolls the output so that the given row is at the top of the viewport.
+         * Exposed globally so async command handlers can call it after DOM updates.
+         *
+         * @param {HTMLElement} rowElement
+         */
+        window.forceScrollToRow = function(rowElement) {
+            rowElement.scrollIntoView({ behavior: 'auto', block: 'start' });
+        };
+
+        // Fetch and render the splash screen on initial page load.
         (async () => {
             const res = await apiCall('fetchme');
             if (res.output) {
                 output.insertAdjacentHTML('beforeend', res.output);
-                // Hint row after fetchme
                 const hint = document.createElement('div');
                 hint.className = 'banner-row';
                 hint.innerHTML = `Type <span style="color:var(--cyan)">help</span> to see available commands.`;
@@ -112,7 +122,6 @@ $user  = htmlspecialchars($_SESSION['username']);
             }
         })();
 
-        /* ─── keyboard handler ───────────────────── */
         input.addEventListener('keydown', async (e) => {
             if (e.key === 'Enter') {
                 const cmd = input.value;
@@ -124,15 +133,34 @@ $user  = htmlspecialchars($_SESSION['username']);
                     histIdx = history.length;
                 }
 
-                appendEcho(cmd);
+                const parts   = cmd.trim().split(/\s+/);
+                const baseCmd = (parts[0] || '').toLowerCase();
 
-                const result = await processCommand(cmd, { appendResult, scrollBottom });
+                // Scroll strategy: jump to the echoed command row after execution
+                // so the user always sees their prompt at the top. Exceptions:
+                //   clear      — no output row exists to scroll to.
+                //   profile × 2 — avoid jarring jumps when rapidly re-running profile.
+                let shouldScrollToTop = true;
+                if (baseCmd === 'clear') {
+                    shouldScrollToTop = false;
+                } else if (baseCmd === 'profile' && lastCommandType === 'profile') {
+                    shouldScrollToTop = false;
+                }
+
+                const activeRow = appendEcho(cmd);
+                const result    = await processCommand(cmd, { appendResult, scrollBottom });
 
                 if (result !== null && result !== undefined) {
                     appendResult(result);
                 }
 
-                scrollBottom();
+                if (shouldScrollToTop && window.forceScrollToRow) {
+                    window.forceScrollToRow(activeRow);
+                } else {
+                    scrollBottom();
+                }
+
+                lastCommandType = baseCmd;
 
             } else if (e.key === 'ArrowUp') {
                 e.preventDefault();

@@ -1,169 +1,204 @@
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400&display=swap');
 
-*, *::before, *::after {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+/* ─── DESIGN TOKENS ─────────────────────────────────────────────────────────
+   All colour and semantic variables live here. theme.css overrides these
+   per theme class applied to <body>. Do not hardcode hex values elsewhere.
+   ─────────────────────────────────────────────────────────────────────────── */
+:root {
+    --bg: #0d0f12;
+    --bg2: #15181e;
+    --fg: #8fa3b3;
+    --dim: #4a5a6a;
+    --accent: #c0cdd8;
+    --accent-fg: #0d0f12;
+    --border: #2a3241;
+    --red: #e06c75;
+    --green: #5fbd8a;
+    --yellow: #d4b96a;
+    --blue: #7da4d9;
+    --magenta: #c778a0;
+    --cyan: #56b6c2;
 }
 
-html, body {
-    height: 100%;
-    width: 100%;
-    overflow: hidden;
-}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
-    font-family: 'JetBrains Mono', 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
-    font-variant-ligatures: none;
-    -webkit-font-smoothing: antialiased;
-    text-rendering: optimizeLegibility;
+    font-family: 'JetBrains Mono', monospace;
     background-color: var(--bg);
     color: var(--fg);
     font-size: 13px;
-    line-height: 1.5;
-}
-
-.fetch-ascii, .login-logo, pre {
-    font-family: monospace, monospace;
-    font-variant-ligatures: none;
-    font-feature-settings: "liga" 0, "calt" 0, "kern" 0;
-    letter-spacing: 0;
-    word-spacing: 0;
-    font-size: 13px;
-    line-height: 1.15;
-    white-space: pre;
-    color: var(--accent);
-    font-weight: 700;
-}
-
-#terminal, .login-terminal {
-    display: grid;
-    grid-template-rows: 1fr auto;
-    height: 100vh;
-    width: 100%;
+    line-height: 1.4;
     overflow: hidden;
 }
 
-.login-terminal {
-    grid-template-rows: auto auto 1fr auto;
-    padding: 18px 20px 6px 20px;
-}
-
-#output, .login-output {
-    overflow-y: auto;
-    overflow-x: hidden;
-    padding: 14px 18px 4px 18px;
-    display: block;
-    overscroll-behavior: contain;
-    scrollbar-width: thin;
-    scrollbar-color: var(--scrollbar) transparent;
-}
+/* ─── TERMINAL BASE ─── */
+#terminal, .login-terminal { display: grid; grid-template-rows: 1fr auto; height: 100vh; width: 100%; overflow: hidden; }
+.login-terminal { grid-template-rows: auto auto 1fr auto; padding: 18px 20px 6px 20px; }
+#output, .login-output { overflow-y: auto; overflow-x: hidden; padding: 14px 18px 4px 18px; scrollbar-width: none; }
+#output::-webkit-scrollbar, .login-output::-webkit-scrollbar { display: none; }
 .login-output { padding: 0 0 4px 0; }
 
+/* ─── LOGIN PAGE ─── */
+.login-logo {
+    font-family: monospace;
+    font-size: clamp(5px, 1vw, 12px); /* scales with viewport; prevents overflow on narrow screens */
+    line-height: 1.15;
+    white-space: pre;
+    overflow: hidden;
+    color: var(--accent);
+    margin-bottom: 10px;
+    display: block;
+}
+.login-hint {
+    font-size: 12px;
+    color: var(--dim);
+    margin-bottom: 14px;
+    padding-left: 2px;
+}
+
+/* ─── INPUT BAR ─── */
 #input-row, .login-input-row {
     display: flex;
     align-items: center;
-    margin: 6px 14px 10px 14px;
+    margin: 6px 14px 20px 14px;
     padding: 5px 12px 5px 0;
     border: 1px solid var(--accent);
-    border-radius: 3px;
-    background-color: var(--bg2);
-    box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 15%, transparent), 0 0 14px color-mix(in srgb, var(--accent) 9%, transparent);
+    border-radius: 4px;
+    background-color: transparent;
     min-height: 36px;
     flex-shrink: 0;
 }
-.login-input-row { margin: 6px 0 4px 0; }
+.login-input-row { margin: 6px 14px 12px 14px; }
 
-#input-row:focus-within, .login-input-row:focus-within {
-    border-color: var(--accent);
-    box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 30%, transparent), 0 0 20px color-mix(in srgb, var(--accent) 16%, transparent);
-}
-
-.prompt-wrap {
-    display: inline-flex;
-    align-items: stretch;
-    height: 24px;
-    margin-right: 10px;
-}
-
+/* ─── PROMPT CHIP + ARROW
+   The arrow is a CSS border-trick chevron that must match the chip height (24px)
+   exactly: border-top and border-bottom each at half = 12px.
+   ─── */
+.prompt-wrap { display: flex; height: 24px; margin-right: 10px; flex-shrink: 0; }
 .prompt-body {
     background-color: var(--accent);
     color: var(--accent-fg);
-    padding: 0 9px;
-    font-weight: 700;
+    height: 24px;
+    line-height: 24px;
+    padding: 0 10px;
+    font-weight: 800;
     font-size: 12px;
-    display: inline-flex;
+    display: flex;
     align-items: center;
-    white-space: nowrap;
 }
-
 .prompt-arrow {
     width: 0; height: 0;
     border-top: 12px solid transparent;
     border-bottom: 12px solid transparent;
     border-left: 10px solid var(--accent);
+    flex-shrink: 0;
 }
 
-.input-text-area {
-    display: flex;
-    align-items: center;
-    flex: 1;
-    position: relative;
-    overflow: hidden;
-}
+/* ─── INVISIBLE REAL INPUT + VISIBLE MIRROR SPAN
+   The real <input> is hidden (opacity 0, 1px wide) so the browser still
+   receives focus and keyboard events. The visible text and cursor are painted
+   by .typed-text and .cursor, kept in sync via JS.
+   ─── */
+.input-text-area { display: flex; align-items: center; flex: 1; height: 24px; position: relative; overflow: hidden; }
+#cmd-input { position: absolute; opacity: 0; width: 1px; outline: none; }
+.typed-text { color: var(--fg); font-size: 13px; line-height: 24px; white-space: pre; }
+.cursor { width: 8px; height: 15px; background: var(--fg); animation: blink 1s step-end infinite; margin-left: 2px; }
+@keyframes blink { 50% { opacity: 0; } }
 
-#cmd-input {
-    position: absolute; opacity: 0; width: 1px; height: 1px; border: none;
-}
-.typed-text { white-space: pre; font-size: 13px; color: var(--fg); }
-.cursor { display: inline-block; width: 7px; height: 15px; background-color: var(--fg); animation: blink 1.1s step-end infinite; margin-left: 1px; vertical-align: text-bottom; }
-@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+.cmd-echo { display: flex; align-items: flex-start; margin-bottom: 6px; min-height: 24px; }
+.cmd-echo .prompt-wrap { height: 24px; margin-right: 10px; }
+.cmd-echo-text { color: var(--fg); font-size: 13px; line-height: 24px; white-space: pre-wrap; word-break: break-all; }
 
-.cmd-echo {
-    display: block;
-    margin-bottom: 4px;
-    line-height: 1.5;
+/* ─── DOUBLE-LAYER ASCII ART HEADER
+   Two copies of the ASCII block are stacked: a background layer offset by
+   3px with a text stroke to fake a drop shadow, and a foreground layer in
+   full accent colour on top.
+   ─── */
+.fetch-ascii-header { position: relative; margin-bottom: 24px; height: 75px; }
+.ascii-fg { position: absolute; top: 0; left: 0; color: var(--accent); z-index: 2; }
+.ascii-bg {
+    position: absolute;
+    top: 3px; left: 3px;
+    color: transparent;
+    -webkit-text-stroke: 1px var(--dim);
+    z-index: 1;
 }
-.cmd-echo .prompt-wrap { height: 22px; margin-right: 8px; vertical-align: middle; }
-.cmd-echo-text { display: inline; color: var(--fg); white-space: pre-wrap; word-break: break-all; vertical-align: middle; }
+.fetch-ascii, pre { font-family: monospace; font-size: 12px; line-height: 1.1; white-space: pre !important; font-weight: 700; }
 
-.result-block {
-    display: block;
-    margin: 0 0 16px 0; 
-    padding: 0;
+/* ─── FETCHME OUTPUT ─── */
+.fetch-wrap { display: flex; flex-direction: column; gap: 4px; margin-bottom: 24px; margin-top: 6px; }
+.fetch-desc-text {
+    line-height: 1.6;
+    text-align: justify;
+    max-width: 850px;
+    margin-bottom: 16px;
     color: var(--fg);
-    line-height: 1.5;
-    white-space: pre-wrap;
-    word-break: break-word;
 }
+.fetch-stack-text { margin-bottom: 16px; }
+.stack-line { display: flex; align-items: center; margin-bottom: 8px; }
+.stack-label { color: var(--dim); font-size: 11px; font-weight: 800; text-transform: uppercase; margin-right: 8px; width: 80px; }
+.fetch-dev-text { color: var(--fg); line-height: 1.5; font-size: 13px; }
 
-.result-error { color: var(--red); display: block; }
-.result-info { color: var(--yellow); display: block; }
+/* ─── MULTI-REPO GRID
+   Repos opened together via `repo name1 name2` are displayed side-by-side
+   in a horizontally scrollable flex row.
+   ─── */
+.multi-repo-container {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    overflow-x: auto;
+    padding-bottom: 12px;
+    max-width: 100%;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+}
+.multi-repo-container .repo-detail-box { flex: 0 0 auto; margin-bottom: 0; }
 
-.fetch-wrap { display: block; white-space: nowrap; }
-.fetch-ascii { display: inline-block; vertical-align: top; margin-right: 32px; }
+/* ─── REPO DETAIL ─── */
+.repo-detail-box { border: 1px solid var(--border); border-radius: 4px; padding: 14px 18px; width: fit-content; min-width: 300px; background-color: var(--bg2); margin-bottom: 12px; }
+.repo-large-name { font-size: 26px; font-weight: 900; color: var(--accent); text-transform: uppercase; margin-bottom: 4px; }
+.repo-detail-owner { color: var(--dim); font-size: 12px; margin-bottom: 14px; }
+.repo-detail-row { display: block; font-size: 13px; line-height: 1.5; white-space: pre; }
+.repo-detail-label { display: inline-block; width: 100px; color: var(--accent); font-weight: 700; }
+.repo-detail-sep { display: inline-block; width: 16px; color: var(--dim); }
+.repo-detail-val { display: inline-block; color: var(--fg); }
+.repo-detail-desc { display: block; color: var(--fg); margin-bottom: 14px; padding-left: 14px; border-left: 2px solid var(--border); line-height: 1.4; font-size: 12px; max-width: 400px; white-space: normal; }
+
+/* ─── UI ELEMENTS ─── */
+.badge { display: inline-block; padding: 3px 6px; font-size: 10px; font-weight: 800; border-radius: 2px; }
+.badge-html { background: #E34F26; color: #fff; }
+.badge-css  { background: #1572B6; color: #fff; }
+.badge-js   { background: #F7DF1E; color: #000; }
+.badge-php  { background: #777BB4; color: #fff; }
+.badge-sql  { background: #4479A1; color: #fff; }
+
+.ascii-divider { color: var(--dim); font-family: monospace; white-space: pre; font-size: 11px; margin: 12px 0; }
+.repo-keybind { display: flex; font-size: 12px; }
+.keybind-item { margin-right: 20px; }
+.keybind-key { border: 1px solid var(--accent); padding: 0 6px; color: var(--accent); font-weight: 700; border-radius: 2px; font-size: 11px; margin-right: 6px; }
+.keybind-label { color: var(--dim); font-size: 11px; }
+.keybind-downloading { color: var(--yellow); } .keybind-done { color: var(--green); }
+
+/* ─── PROFILE COMMAND ─── */
+.fetch-profile-wrap { display: flex; flex-direction: row; align-items: flex-start; gap: 16px; margin-bottom: 12px; }
+.fetch-media-column { display: flex; flex-direction: column; align-items: center; margin-right: 12px; }
+.profile-img { width: 80px; height: 80px; object-fit: cover; display: block; margin-bottom: 8px; border-radius: 4px; }
 .fetch-info { display: inline-block; vertical-align: top; white-space: normal; }
-
-.fetch-row { display: block; line-height: 1.5; font-size: 13px; white-space: pre; margin: 0; padding: 0; }
+.fetch-row { display: block; line-height: 1.35; font-size: 13px; white-space: pre; margin: 0; padding: 0; }
 .fetch-label { display: inline-block; width: 120px; color: var(--accent); font-weight: 800; letter-spacing: 0.01em; }
 .fetch-sep { display: inline-block; width: 16px; color: var(--dim); }
-.fetch-val { display: inline-block; color: var(--fg); font-weight: 400; white-space: pre-wrap; }
-.fetch-indent { display: block; padding-left: 136px; color: var(--cyan); line-height: 1.5; font-size: 13px; margin: 0; }
-.fetch-colors { display: block; margin-top: 6px; padding-left: 136px; }
-.fetch-colors span { display: inline-block; font-size: 14px; line-height: 1; letter-spacing: -1px; }
+.fetch-val { display: inline-block; color: var(--fg); font-weight: 400; white-space: pre-wrap; vertical-align: middle; }
 
-.online-list, .repo-list, .help-table { display: block; margin: 0; padding: 0; }
-
-.online-row { display: block; line-height: 1.5; white-space: pre; margin: 0; padding: 0; }
-.status-dot { display: inline-block; width: 18px; color: var(--green); font-size: 11px; }
-
+/* ─── HELP COMMAND ─── */
 .help-section { display: block; color: var(--yellow); font-weight: 700; margin: 12px 0 4px 0; font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; }
-.help-row { display: block; line-height: 1.5; white-space: pre; margin: 0; padding: 0; }
-.help-cmd { display: inline-block; width: 160px; color: var(--cyan); font-weight: 700; vertical-align: top;}
-.help-desc { display: inline-block; color: var(--dim); vertical-align: top; }
+.help-row { display: flex; align-items: baseline; gap: 16px; line-height: 1.6; margin: 0; padding: 0; }
+.help-cmd { flex: 0 0 auto; min-width: 200px; color: var(--cyan); font-weight: 700; white-space: pre; }
+.help-desc { flex: 1; color: var(--dim); white-space: normal; }
 
+/* ─── REPO LIST ─── */
 .repo-header { display: block; color: var(--dim); border-bottom: 1px solid var(--border); padding-bottom: 2px; margin-bottom: 2px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; white-space: pre; }
-.repo-row { display: block; font-size: 13px; line-height: 1.5; white-space: pre; margin: 0; padding: 0; }
+.repo-row { display: block; font-size: 13px; line-height: 1.4; white-space: pre; margin: 0; padding: 0; }
 .repo-idx   { display: inline-block; width: 32px;  color: var(--dim); }
 .repo-name  { display: inline-block; width: 180px; color: var(--accent); font-weight: 700; overflow: hidden; text-overflow: ellipsis; vertical-align: top; }
 .repo-lang  { display: inline-block; width: 110px; vertical-align: top; }
@@ -172,42 +207,23 @@ body {
 .repo-date  { display: inline-block; width: 100px; color: var(--dim); vertical-align: top; }
 .repo-hint { display: block; margin-top: 8px; color: var(--dim); font-size: 11px; }
 
-.repo-detail { display: block; margin: 0; padding: 0; }
-.repo-detail-header { display: block; margin-bottom: 6px; white-space: pre; }
-.repo-detail-icon { display: inline-block; width: 20px; color: var(--accent); }
-.repo-detail-name { display: inline-block; color: var(--accent); font-weight: 800; font-size: 14px; }
-.repo-detail-owner { display: inline-block; color: var(--dim); margin-left: 10px; font-size: 12px; }
+/* ─── SHOWCASE LIST & VIEW ─── */
+.showcase-list-header { display: grid; grid-template-columns: 80px 220px 80px 150px; color: var(--dim); font-weight: bold; font-size: 11px; text-transform: uppercase; margin-bottom: 6px; padding-bottom: 4px; border-bottom: 1px solid var(--border); }
+.showcase-list-row { display: grid; grid-template-columns: 80px 220px 80px 150px; align-items: center; margin-bottom: 8px; }
+.showcase-thumb { width: 44px; height: 32px; object-fit: cover; border: 1px solid var(--border); border-radius: 3px; background-color: var(--bg2); }
+.showcase-name { color: var(--accent); font-weight: 700; }
+.showcase-type { color: var(--yellow); font-size: 12px; }
+.showcase-category { color: var(--magenta); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
 
-.repo-detail-desc { display: block; color: var(--fg); margin-bottom: 8px; padding-left: 16px; border-left: 2px solid var(--border); line-height: 1.5; font-size: 12px; }
-.repo-detail-row { display: block; line-height: 1.5; white-space: pre; margin: 0; padding: 0; font-size: 13px; }
-.repo-detail-label { display: inline-block; width: 100px; color: var(--accent); font-weight: 700; }
-.repo-detail-sep { display: inline-block; width: 16px; color: var(--dim); }
-.repo-detail-val { display: inline-block; color: var(--fg); }
+.showcase-view-box { border: 1px solid var(--border); background-color: var(--bg2); padding: 16px; width: fit-content; max-width: 100%; border-radius: 4px; margin-bottom: 12px; }
+.showcase-large-img { width: 100%; max-width: 850px; border: 1px solid var(--border); margin-bottom: 14px; background-color: var(--bg); display: block; border-radius: 3px; }
+.showcase-details-bar { display: flex; justify-content: space-between; border-top: 1px dashed var(--border); padding-top: 12px; gap: 32px; }
+.showcase-detail-item { display: flex; flex-direction: column; }
+.showcase-detail-label { font-size: 11px; text-transform: uppercase; color: var(--dim); font-weight: 700; margin-bottom: 4px; }
+.showcase-detail-value { font-size: 14px; color: var(--fg); }
 
-.repo-keybind { display: block; margin-top: 12px; padding: 6px 12px; border: 1px solid var(--border); background: var(--bg2); width: fit-content; line-height: 1.5; white-space: pre; border-radius: 3px; font-size: 12px; }
-.keybind-key { display: inline-block; border: 1px solid var(--accent); padding: 0 6px; color: var(--accent); font-weight: 700; text-align: center; margin-right: 8px; border-radius: 2px; font-size: 11px; letter-spacing: 0.04em; }
-.keybind-label { display: inline-block; color: var(--dim); margin-right: 20px; font-size: 11px; }
-.keybind-downloading { color: var(--yellow); } .keybind-done { color: var(--fg); }
-
-.boot-row, .boot-bar, .banner-row { display: block; line-height: 1.5; font-size: 13px; color: var(--dim); margin: 0; padding: 0; white-space: pre-wrap; }
-.boot-ok { color: var(--green); }
-.boot-bar { color: var(--cyan); }
-.boot-done { color: var(--yellow); margin-top: 4px; }
-.login-hint { display: block; color: var(--yellow); font-weight: 700; margin-bottom: 12px; font-size: 12px; }
-
-.register-terminal { display: flex; flex-direction: column; height: 100vh; padding: 24px 32px; overflow-y: auto; }
-.register-section { margin-top: 16px; max-width: 480px; }
-.register-title { color: var(--yellow); font-weight: 700; margin-bottom: 14px; letter-spacing: 0.05em; }
-.field-row { display: flex; align-items: center; margin-bottom: 10px; gap: 0; }
-.field-label { color: var(--accent); font-weight: 700; min-width: 120px; flex-shrink: 0; }
-.field-input { background: transparent; border: none; border-bottom: 1px solid var(--border); color: var(--fg); font-family: inherit; font-size: 13px; padding: 2px 6px; outline: none; flex: 1; transition: border-color 0.15s ease; }
-.field-input:focus { border-bottom-color: var(--accent); }
-.register-btn { margin-top: 18px; background: transparent; border: 1px solid var(--accent); color: var(--accent); font-family: inherit; font-size: 13px; font-weight: 700; padding: 6px 20px; cursor: pointer; letter-spacing: 0.08em; transition: background 0.15s ease, color 0.15s ease; }
-.register-btn:hover { background: var(--accent); color: var(--accent-fg); }
-.register-link { margin-top: 12px; color: var(--dim); font-size: 12px; }
-.register-link a { color: var(--cyan); text-decoration: none; }
-.register-link a:hover { text-decoration: underline; }
-.register-error { color: var(--red); margin-bottom: 10px; font-size: 12px; }
-
-.c-black{color:#21222c;} .c-red{color:#ff5555;} .c-green{color:#50fa7b;} .c-yellow{color:#f1fa8c;} .c-blue{color:#bd93f9;} .c-magenta{color:#ff79c6;} .c-cyan{color:#8be9fd;} .c-white{color:#f8f8f2;}
-.lang-PHP{color:#8892be;} .lang-JavaScript{color:#f1e05a;} .lang-CSS{color:#563d7c;} .lang-Python{color:#3572A5;} .lang-TypeScript{color:#2b7489;}
+.result-block { margin: 0 0 10px 0; color: var(--fg); line-height: 1.4; word-break: break-word; }
+.result-error { color: var(--red); display: block; }
+.result-info { color: var(--yellow); display: block; }
+.pacman-loader { font-family: monospace; font-weight: bold; white-space: pre; margin-bottom: 6px; }
+.c-cyan { color: var(--cyan); } .c-yellow { color: var(--yellow); } .c-magenta { color: var(--magenta); }

@@ -1,4 +1,12 @@
-# Accumulii
+<div align="center">
+
+  # ▀▄▀▄▀▄ Accumulii ▄▀▄▀▄▀
+
+  **TERMINAL // REPOSITORY // CLI AESTHETIC // COMMUNITY**
+
+<img src="img/showcases/accumuliiscreenshot.png" width="100%" alt="accumulii header" />
+
+</div>
 
 *In Partial Fulfillment of the Requirements for Web Development 1*
 

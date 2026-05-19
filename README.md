@@ -7,9 +7,6 @@
 <img src="img/showcases/accumuliiscreenshot.png" width="100%" alt="accumulii header" />
 
 </div>
-
-*In Partial Fulfillment of the Requirements for Web Development 1*
-
 Accumulii is a terminal-driven developer profile registry and repository showcase. It provides a CLI-native web environment for managing code portfolios, broadcasting system logs, presenting graphical UI rices, and inspecting community repositories — all through an interactive terminal interface running in the browser.
 
 ---

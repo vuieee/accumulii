@@ -1,6 +1,6 @@
 <div align="center">
 
-  # Accumulii 
+  # ACCUMULII
 
   **TERMINAL // REPOSITORY // CLI AESTHETIC // COMMUNITY**
 

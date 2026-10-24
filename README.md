@@ -9,7 +9,8 @@ A terminal-style developer profile registry and repository showcase.
 | | |
 | :--- | :--- |
 | Course | Web Development I |
-| Program | Information Technology, 2nd Year |
+| Program | Information Technology |
+| Year Level | 2nd Year |
 
 ## Team
 

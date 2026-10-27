@@ -1,7 +1,5 @@
 # Accumulii
 
-A terminal-style developer profile registry and repository showcase.
-
 <img src="img/showcases/accumuliiscreenshot.png" width="100%" alt="Accumulii terminal interface" />
 
 ## Course Information
